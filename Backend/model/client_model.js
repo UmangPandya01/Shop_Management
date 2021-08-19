@@ -42,11 +42,23 @@ const clientSchema = mongoose.Schema({
     // }]
 })
 
-clientSchema.virtual('appointments' //* path for populate
-,{
+clientSchema.virtual('appointments', //* path for populate
+{
     ref: 'Appointment', // * Collection name 
     localField: '_id',
     foreignField: 'clientID' //* key name of Appointment collection
+})
+
+clientSchema.virtual('cartProducts', {
+    ref: 'Cart',
+    localField: '_id',
+    foreignField:  'clientID',
+})
+
+clientSchema.virtual('orderProducts', {
+    ref: 'Order',
+    localField: '_id',
+    foreignField: 'clientID',
 })
 
 const Client = mongoose.model('Client', clientSchema)

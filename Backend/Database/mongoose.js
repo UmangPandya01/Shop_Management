@@ -1,9 +1,10 @@
 const mongoose = require('mongoose')
 
 
-const connectionURL = 'mongodb+srv://Krish_Marsonia:krish2000@cluster0.ecnqg.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+const connectionURL = process.env.CONNECTION_URL
 
-mongoose.connect(connectionURL, {
+
+mongoose.connect(connectionURL,{
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true

@@ -8,7 +8,8 @@ const chalk = require('chalk')
 //     setting: 3,
 //     masssage: 4,
 //     haircolor: 5,
-// }
+// } 
+
 //? get all appointment - Client
 exports.getAllAppointment = async (req, res, next) => {
 
@@ -31,18 +32,30 @@ exports.getAllAppointment = async (req, res, next) => {
 exports.addAppointment = async (req, res, next) => {
     
     try {
-
+        
         const barber = await Barber.findOne({ number: req.body.number })
         console.log(chalk.inverse(barber));
-        
-        const appointment = new Appointment({
-            ...req.body,
-            clientID: req.client._id,
-            barberID: barber._id
+
+        const isAvailable = await Appointment.findOne({
+            barberID: barber._id,
+            slote: req.body.slote,
         })
-        console.log(chalk.inverse(appointment));
-        await appointment.save()
-        res.status(200).send(appointment)
+
+        if (isAvailable) {
+            res.status(401).send({ error: 'Slote is already booked!' })
+        }
+        else {
+            const appointment = new Appointment({
+                ...req.body,
+                clientID: req.client._id,
+                barberID: barber._id,
+                slote: req.body.slote,
+                isEmpty: false,
+            })
+            // console.log(chalk.inverse(appointment));
+            await appointment.save()
+            res.status(200).send(appointment)
+        }
 
     } catch (error) {
         console.log(chalk.red(error));
@@ -69,5 +82,53 @@ exports.deleteByID = async (req, res, next) => {
     } catch (error) {
         console.log(chalk.red(error));
         res.status(500).send({error: error})
+    }
+}
+
+exports.emptyslotes = async (req, res) => {
+
+    try {
+        fillSlotes()
+        const appointments = await Appointment.find({barberID: req.query.barberID})
+        console.log(chalk.inverse(appointments));
+        
+        if (!appointments) {
+
+            //* For display
+            slotes.forEach((slote) => {
+                console.log(chalk.green.inverse(slote));
+            })
+        }
+        
+        else {
+            appointments.forEach((appointment) => {
+                // console.log(appointment.barberID);
+                if (appointment.barberID == req.query.barberID) {
+                    slotes[appointment.slote - 1] = (appointment.isEmpty)
+                }
+            
+            })
+
+            //* For display
+            slotes.forEach((slote) => {
+                if (slote)
+                    console.log(chalk.green.inverse('Available'));
+                else
+                    console.log(chalk.red.inverse('Not Available'));
+            })
+        console.log(slotes);
+            res.status(200).send(slotes)
+        }
+
+    } catch (error) {
+        console.log(chalk.red(error));
+        res.status(500).send({error: error})
+    }
+}
+var slotes = []
+function fillSlotes()  {
+    console.log('getting slotes');
+    for (let index = 0; index < 18; index++) {
+        slotes[index] = true;
     }
 }

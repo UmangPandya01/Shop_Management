@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 
 const appointmentSchema = ({
-    service: {
+    serviceType: {
         type: String,
         required: true,
     },
@@ -11,23 +11,34 @@ const appointmentSchema = ({
         required: true,
         ref: 'Client'
     },
-    serviceID: {
-        type: mongoose.Schema.Types.ObjectId,
-        // requred: true,
-        ref: 'Service',
+    serviceName: {
+        type: String,
+        requred: true,
     },
     barberID: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Barber'
     },
     time: {
-        type: Date,
-        // required: true,
+        type: String,
+        required: true,
+    },
+    price: {
+        type: Number,
+        required: true,
+    },
+    slote: {
+        type: Number,
+        required: true,
     },
     isCompleted: {
         type: Boolean,
         default: false,
-    }
+    },
+    isEmpty: {
+        type: Boolean,
+        default: true
+    },
 })
 
 const Appointment = mongoose.model('Appointment', appointmentSchema)

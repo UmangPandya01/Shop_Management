@@ -8,8 +8,8 @@ const auth = async (req, res, next) => {
     try {
         
         const token = req.header('Authorization').replace('Bearer ', '')
-        
-        const decoded = jwt.verify(token, 'unavailnodejsSecretKey')
+        console.log(token);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
         console.log(decoded._id);
         const client = await Client.findOne({
             _id: decoded._id
